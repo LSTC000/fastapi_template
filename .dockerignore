@@ -1,0 +1,7 @@
+.ide
+venv
+.env
+.env.dist
+.git
+.gitignore
+Makefile
