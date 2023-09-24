@@ -12,4 +12,4 @@ class StatusType(Enum):
 class BaseAPIResponse(BaseModel):
     status: StatusType
     data: Optional[dict] = None
-    details: Optional[str] = None
+    detail: Optional[str] = None

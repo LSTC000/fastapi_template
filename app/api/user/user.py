@@ -4,8 +4,8 @@ from .schemas import UserSchema, UserAddSchema, UserEditSchema
 from .services import UserService
 from .dependencies import user_service
 
-from fastapi import APIRouter, Depends
-
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix='/user', tags=['User'])
 
@@ -19,10 +19,10 @@ async def get_user(user_id: int, service: UserService = Depends(user_service)):
             status=StatusType.success.value,
             data={'user_data': UserSchema(**user_data)} if user_data is not None else user_data,
         )
-    except Exception as exc:
+    except HTTPException as exc:
         return BaseAPIResponse(
             status=StatusType.success.error,
-            details=str(exc)
+            detail=exc.detail
         )
 
 
@@ -35,10 +35,15 @@ async def add_user(user_data: UserAddSchema, service: UserService = Depends(user
             status=StatusType.success.value,
             data={'user_id': user_id} if user_id is not None else user_id,
         )
-    except Exception as exc:
+    except IntegrityError:
         return BaseAPIResponse(
             status=StatusType.success.error,
-            details=str(exc)
+            detail='This email already exist'
+        )
+    except HTTPException as exc:
+        return BaseAPIResponse(
+            status=StatusType.success.error,
+            detail=exc.detail
         )
 
 
@@ -51,10 +56,10 @@ async def edit_user(user_id: int, new_user_data: UserEditSchema, service: UserSe
             status=StatusType.success.value,
             data={'user_id': user_id} if user_id is not None else user_id,
         )
-    except Exception as exc:
+    except HTTPException as exc:
         return BaseAPIResponse(
             status=StatusType.success.error,
-            details=str(exc)
+            detail=exc.detail
         )
 
 
@@ -67,8 +72,8 @@ async def delete_user(user_id: int, service: UserService = Depends(user_service)
             status=StatusType.success.value,
             data={'user_id': user_id} if user_id is not None else user_id,
         )
-    except Exception as exc:
+    except HTTPException as exc:
         return BaseAPIResponse(
             status=StatusType.success.error,
-            details=str(exc)
+            detail=exc.detail
         )
