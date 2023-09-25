@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class Detail:
+class Details:
     exception_error: str = 'We have already started to fix this error'
-
-    email_exist: str = 'This email already exist'
+    success_status: str = 'Request successfully processed'

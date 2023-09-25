@@ -1,11 +1,12 @@
 import logging
 
-from app.response import BaseAPIResponse, StatusType, detail
+from app.response import BaseAPIResponse, StatusType
 from app.common import config
 
 from .schemas import UserSchema, UserAddSchema, UserEditSchema
 from .services import UserService
 from .dependencies import user_service
+from .details import UserDetails
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
@@ -22,92 +23,90 @@ logging.basicConfig(
 
 @router.get('/{user_id}', response_model=BaseAPIResponse)
 async def get_user(user_id: int, service: UserService = Depends(user_service)):
+    response = BaseAPIResponse()
     try:
         user_data = await service.get_user(user_id)
 
-        return BaseAPIResponse(
-            status=StatusType.success.value,
-            data={'user_data': UserSchema(**user_data)} if user_data is not None else user_data,
-        )
+        if user_data is not None:
+            response.data = {'user_data': UserSchema(**user_data)}
+        else:
+            response.status = StatusType.error
+            response.detail = UserDetails.get_user_error
     except HTTPException as exc:
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=exc.detail
-        )
+        response.status = StatusType.error
+        response.detail = exc.detail
     except Exception as exc:
         logging.error(exc)
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=detail.exception_error
-        )
+        response.status = StatusType.error
+        response.detail = UserDetails.exception_error
+    finally:
+        return response
 
 
 @router.post('/', response_model=BaseAPIResponse)
 async def add_user(user_data: UserAddSchema, service: UserService = Depends(user_service)):
+    response = BaseAPIResponse()
     try:
         user_id = await service.add_user(user_data)
 
-        return BaseAPIResponse(
-            status=StatusType.success.value,
-            data={'user_id': user_id} if user_id is not None else user_id,
-        )
+        if user_id is not None:
+            response.data = {'user_id': user_id}
+        else:
+            response.status = StatusType.error
+            response.detail = UserDetails.add_user_error
     except IntegrityError:
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=detail.email_exist
-        )
+        response.status = StatusType.error
+        response.detail = UserDetails.email_exist
     except HTTPException as exc:
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=exc.detail
-        )
+        response.status = StatusType.error
+        response.detail = exc.detail
     except Exception as exc:
         logging.error(exc)
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=detail.exception_error
-        )
+        response.status = StatusType.error
+        response.detail = UserDetails.exception_error
+    finally:
+        return response
 
 
 @router.patch('/', response_model=BaseAPIResponse)
 async def edit_user(user_id: int, new_user_data: UserEditSchema, service: UserService = Depends(user_service)):
+    response = BaseAPIResponse()
     try:
         user_id = await service.edit_user(user_id=user_id, new_user_data=new_user_data)
 
-        return BaseAPIResponse(
-            status=StatusType.success.value,
-            data={'user_id': user_id} if user_id is not None else user_id,
-        )
+        if user_id is not None:
+            response.data = {'user_id': user_id}
+        else:
+            response.status = StatusType.error
+            response.detail = UserDetails.edit_user_error
     except HTTPException as exc:
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=exc.detail
-        )
+        response.status = StatusType.error
+        response.detail = exc.detail
     except Exception as exc:
         logging.error(exc)
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=detail.exception_error
-        )
+        response.status = StatusType.error
+        response.detail = UserDetails.exception_error
+    finally:
+        return response
 
 
 @router.delete('/', response_model=BaseAPIResponse)
 async def delete_user(user_id: int, service: UserService = Depends(user_service)):
+    response = BaseAPIResponse()
     try:
         user_id = await service.delete_user(user_id)
 
-        return BaseAPIResponse(
-            status=StatusType.success.value,
-            data={'user_id': user_id} if user_id is not None else user_id,
-        )
+        if user_id is not None:
+            response.data = {'user_id': user_id}
+        else:
+            response.status = StatusType.error
+            response.detail = UserDetails.delete_user_error
     except HTTPException as exc:
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=exc.detail
-        )
+        response.status = StatusType.error
+        response.detail = exc.detail
     except Exception as exc:
         logging.error(exc)
-        return BaseAPIResponse(
-            status=StatusType.success.error,
-            detail=detail.exception_error
-        )
+        response.status = StatusType.error
+        response.detail = UserDetails.exception_error
+    finally:
+        return response

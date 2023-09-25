@@ -1,7 +1,5 @@
-__all__ = ['BaseAPIResponse', 'StatusType', 'detail']
+__all__ = ['BaseAPIResponse', 'StatusType', 'Details']
 
 
 from .schemas import BaseAPIResponse, StatusType
-from .detail import Detail
-
-detail = Detail()
+from .details import Details

@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Optional
 
+from .details import Details
+
 from pydantic import BaseModel
 
 
@@ -10,6 +12,6 @@ class StatusType(Enum):
 
 
 class BaseAPIResponse(BaseModel):
-    status: StatusType
-    data: Optional[dict] = None
-    detail: Optional[str] = None
+    status: Optional[StatusType] = StatusType.success
+    data: Optional[dict] = {}
+    detail: Optional[str] = Details.success_status
