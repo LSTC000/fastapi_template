@@ -19,3 +19,8 @@ class Config:
     db_host: str = os.getenv('DB_HOST')
     db_port: int = os.getenv('DB_PORT')
     db_name: str = os.getenv('DB_NAME')
+
+    base_logs_path: str = r'logs/log.log'
+    base_logs_format: str = u'#%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s'
+
+    user_logs_path: str = r'logs/user.log'
