@@ -54,7 +54,7 @@ async def add_user(user_data: UserAddSchema, service: UserService = Depends(user
     except IntegrityError:
         return BaseAPIResponse(
             status=StatusType.success.error,
-            detail=detail.email_exists
+            detail=detail.email_exist
         )
     except HTTPException as exc:
         return BaseAPIResponse(

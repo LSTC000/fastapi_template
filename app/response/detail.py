@@ -5,4 +5,4 @@ from dataclasses import dataclass
 class Detail:
     exception_error: str = 'We have already started to fix this error'
 
-    email_exists: str = 'This email already exist'
+    email_exist: str = 'This email already exist'
