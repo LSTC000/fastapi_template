@@ -1,7 +1,7 @@
 import logging
 
-from app.response import BaseAPIResponse, StatusType
 from app.common import config
+from app.utils.response import BaseAPIResponse, StatusType
 
 from .schemas import UserSchema, UserAddSchema, UserEditSchema
 from .services import UserService

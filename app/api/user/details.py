@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.response import Details
+from app.utils.response import Details
 
 
 @dataclass(frozen=True)

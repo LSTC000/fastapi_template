@@ -1,6 +1,6 @@
 from .schemas import UserAddSchema, UserEditSchema
 
-from app.repositories import AbstractRepository
+from app.utils.repositories import AbstractRepository
 
 
 class UserService:
