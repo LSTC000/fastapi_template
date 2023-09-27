@@ -5,7 +5,7 @@ class Logger:
     def __init__(
             self,
             name: str,
-            user_name: str = 'default',
+            user_name: str = 'username',
             log_path: str = 'logs/log.log',
             log_format: str = f'[%(levelname)s] - %(asctime)s - %(username)s - %(name)s - '
                               f'(%(filename)s).%(funcName)s(%(lineno)d) - %(message)s'

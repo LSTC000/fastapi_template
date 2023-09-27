@@ -2,6 +2,7 @@ from .schemas import UserAddSchema, UserEditSchema
 
 from app.utils.repositories import AbstractRepository
 from app.utils.email import Email, EmailSchema, EmailMessages
+from app.utils.celery import send_log_celery
 
 
 class UserService:
@@ -23,6 +24,7 @@ class UserService:
 
 class UserEmailService:
     @staticmethod
+    @send_log_celery.task
     def send_error_log(error_log: str) -> None:
         email_schema = EmailSchema()
 

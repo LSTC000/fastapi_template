@@ -31,6 +31,24 @@ services:
     depends_on:
       - redis
       - db
+  celery:
+    env_file:
+      - .env.docker
+    container_name: celery_app
+    restart: on-failure
+    command: ["/fastapi_app/docker/celery.sh", "celery"]
+    depends_on:
+      - app
+  flower:
+    env_file:
+      - .env.docker
+    container_name: flower_app
+    restart: on-failure
+    command: ["/fastapi_app/docker/celery.sh", "flower"]
+    depends_on:
+      - celery
+    ports:
+      - '5555:5555'
 
 volumes:
   dbdata:

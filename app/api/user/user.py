@@ -34,10 +34,10 @@ async def get_user(
         response.status = StatusType.error
         response.detail = exc.detail
     except Exception as exc:
-        logger.error(exc)
-        email_service.send_error_log(str(exc))
         response.status = StatusType.error
         response.detail = UserDetails.exception_error
+        logger.error(exc)
+        email_service.send_error_log(str(exc))
     finally:
         return response
 
@@ -64,10 +64,10 @@ async def add_user(
         response.status = StatusType.error
         response.detail = exc.detail
     except Exception as exc:
-        logger.error(exc)
-        email_service.send_error_log(str(exc))
         response.status = StatusType.error
         response.detail = UserDetails.exception_error
+        logger.error(exc)
+        email_service.send_error_log(str(exc))
     finally:
         return response
 
@@ -92,10 +92,10 @@ async def edit_user(
         response.status = StatusType.error
         response.detail = exc.detail
     except Exception as exc:
-        logger.error(exc)
-        email_service.send_error_log(str(exc))
         response.status = StatusType.error
         response.detail = UserDetails.exception_error
+        logger.error(exc)
+        email_service.send_error_log(str(exc))
     finally:
         return response
 
@@ -119,9 +119,9 @@ async def delete_user(
         response.status = StatusType.error
         response.detail = exc.detail
     except Exception as exc:
-        logger.error(exc)
-        email_service.send_error_log(str(exc))
         response.status = StatusType.error
         response.detail = UserDetails.exception_error
+        logger.error(exc)
+        email_service.send_error_log(str(exc))
     finally:
         return response
