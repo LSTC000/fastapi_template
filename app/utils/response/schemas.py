@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 from .details import Details
 
@@ -12,6 +11,6 @@ class StatusType(Enum):
 
 
 class BaseAPIResponse(BaseModel):
-    status: Optional[StatusType] = StatusType.success
-    data: Optional[dict] = {}
-    detail: Optional[str] = Details.success_status
+    status: StatusType = StatusType.success
+    data: dict = {}
+    detail: str = Details.success_status

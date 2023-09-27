@@ -11,6 +11,11 @@ load_dotenv(find_dotenv())
 class Config:
     origins: list[str] = field(default_factory=lambda: os.getenv('ORIGINS', '').split(','))
 
+    smtp_user: str = os.getenv('SMTP_USER')
+    smtp_pass: str = os.getenv('SMTP_PASS')
+    smtp_host: str = os.getenv('SMTP_HOST')
+    smtp_port: int = os.getenv('SMTP_PORT')
+
     redis_host: str = os.getenv('REDIS_HOST')
     redis_port: int = os.getenv('REDIS_PORT')
 
@@ -20,7 +25,4 @@ class Config:
     db_port: int = os.getenv('DB_PORT')
     db_name: str = os.getenv('DB_NAME')
 
-    base_logs_path: str = r'logs/log.log'
-    base_logs_format: str = u'#%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s'
-
-    user_logs_path: str = r'logs/user.log'
+    user_log_path: str = r'logs/user.log'

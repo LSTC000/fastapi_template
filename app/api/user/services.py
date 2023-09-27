@@ -1,6 +1,7 @@
 from .schemas import UserAddSchema, UserEditSchema
 
 from app.utils.repositories import AbstractRepository
+from app.utils.email import Email, EmailSchema, EmailMessages
 
 
 class UserService:
@@ -18,3 +19,14 @@ class UserService:
 
     async def delete_user(self, user_id: int) -> dict | None:
         return await self.user_repository.delete_one(user_id)
+
+
+class UserEmailService:
+    @staticmethod
+    def send_error_log(error_log: str) -> None:
+        email_schema = EmailSchema()
+
+        Email.send_email(
+            email_schema=email_schema,
+            message=EmailMessages.error_log_message(subject='USER ERROR LOG', error_log=error_log)
+        )
