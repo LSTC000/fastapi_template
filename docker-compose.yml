@@ -9,7 +9,7 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - redisdata:/data
+      - redis_data:/data
   db:
     image: postgres:15
     container_name: db
@@ -19,37 +19,52 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3.12.6-management
+    container_name: rabbitmq
+    restart: on-failure
+    env_file:
+      - .env.docker
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
   app:
     build: .
     container_name: app
+    restart: always
     ports:
       - '8000:8000'
     env_file:
       - .env.docker
-    restart: always
     depends_on:
       - redis
       - db
+      - rabbitmq
   celery:
-    env_file:
-      - .env.docker
+    build: .
     container_name: celery_app
     restart: on-failure
-    command: ["/fastapi_app/docker/celery.sh", "celery"]
+    command: [ "/fastapi_app/docker/celery.sh", "celery" ]
+    env_file:
+      - .env.docker
     depends_on:
       - app
   flower:
-    env_file:
-      - .env.docker
+    build: .
     container_name: flower_app
     restart: on-failure
-    command: ["/fastapi_app/docker/celery.sh", "flower"]
-    depends_on:
-      - celery
+    command: [ "/fastapi_app/docker/celery.sh", "flower" ]
     ports:
       - '5555:5555'
+    env_file:
+      - .env.docker
+    depends_on:
+      - celery
 
 volumes:
-  dbdata:
-  redisdata:
+  db_data:
+  redis_data:
+  rabbitmq_data:

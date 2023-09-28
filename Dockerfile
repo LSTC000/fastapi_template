@@ -4,4 +4,4 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY . .
 RUN chmod a+x docker/*.sh
-CMD ["/fastapi_app/docker/app.sh"]
+CMD [ "/fastapi_app/docker/app.sh" ]

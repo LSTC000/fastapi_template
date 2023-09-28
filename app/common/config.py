@@ -16,6 +16,11 @@ class Config:
     smtp_host: str = os.getenv('SMTP_HOST')
     smtp_port: int = os.getenv('SMTP_PORT')
 
+    rabbitmq_user: str = os.getenv('RABBITMQ_USER')
+    rabbitmq_pass: str = os.getenv('RABBITMQ_PASS')
+    rabbitmq_host: str = os.getenv('RABBITMQ_HOST')
+    rabbitmq_port: int = os.getenv('RABBITMQ_PORT')
+
     redis_host: str = os.getenv('REDIS_HOST')
     redis_port: int = os.getenv('REDIS_PORT')
 
