@@ -31,3 +31,4 @@ class Config:
     db_name: str = os.getenv('DB_NAME')
 
     user_log_path: str = r'logs/user.log'
+    post_log_path: str = r'logs/post.log'

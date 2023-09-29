@@ -1,19 +1,29 @@
 from .schemas import UserAddSchema, UserEditSchema
+from .models import User
 
 from app.utils.repositories import AbstractRepository
 from app.utils.email import Email, EmailSchema, EmailMessages
 from app.utils.celery import send_log_celery
 
+from sqlalchemy.orm import selectinload
 
-class UserService:
+
+class UserDBService:
     def __init__(self, user_repository: type[AbstractRepository]):
         self.user_repository = user_repository()
 
     async def add_user(self, user_data: UserAddSchema) -> int | None:
         return await self.user_repository.add_one(user_data.model_dump())
 
-    async def get_user(self, user_id: int) -> dict | None:
-        return await self.user_repository.get_one(user_id)
+    async def get_user(self, user_id: int, posts_data: bool = False) -> dict | None:
+        if posts_data:
+            return await self.user_repository.get_one(
+                target_id=user_id,
+                option=selectinload,
+                queryable_attribute=User.posts
+            )
+
+        return await self.user_repository.get_one(target_id=user_id)
 
     async def edit_user(self, user_id: int, new_user_data: UserEditSchema) -> int | None:
         return await self.user_repository.edit_one(target_id=user_id, new_target_data=new_user_data.model_dump())

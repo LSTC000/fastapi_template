@@ -1,10 +1,11 @@
+from .schemas import UserSchema, UserAddSchema, UserEditSchema
+from .services import UserDBService, UserEmailService
+from .dependencies import user_db_service, user_email_service
+from .details import UserDetails
+
 from app.common import config, Logger
 from app.utils.response import BaseAPIResponse, StatusType
-
-from .schemas import UserSchema, UserAddSchema, UserEditSchema
-from .services import UserService, UserEmailService
-from .dependencies import user_service, user_email_service
-from .details import UserDetails
+from app.api.post.schemas import PostSchema
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
@@ -18,12 +19,12 @@ logger = Logger(name=__name__, log_path=config.user_log_path).get_logger()
 @router.get('/{user_id}', response_model=BaseAPIResponse)
 async def get_user(
         user_id: int,
-        service: UserService = Depends(user_service),
+        db_service: UserDBService = Depends(user_db_service),
         email_service: UserEmailService = Depends(user_email_service)
 ):
     response = BaseAPIResponse()
     try:
-        user_data = await service.get_user(user_id)
+        user_data = await db_service.get_user(user_id)
 
         if user_data is not None:
             response.data = {'user_data': UserSchema(**user_data)}
@@ -42,15 +43,44 @@ async def get_user(
         return response
 
 
-@router.post('/', response_model=BaseAPIResponse)
-async def add_user(
-        user_data: UserAddSchema,
-        service: UserService = Depends(user_service),
+@router.get('/posts/{user_id}', response_model=BaseAPIResponse)
+async def get_user_posts(
+        user_id: int,
+        db_service: UserDBService = Depends(user_db_service),
         email_service: UserEmailService = Depends(user_email_service)
 ):
     response = BaseAPIResponse()
     try:
-        user_id = await service.add_user(user_data)
+        user_data = await db_service.get_user(user_id, posts_data=True)
+
+        if user_data is not None:
+            response.data = {
+                'posts_data': [PostSchema(**post.__dict__) for post in user_data['posts']]
+            }
+        else:
+            response.status = StatusType.error
+            response.detail = UserDetails.get_user_error
+    except HTTPException as exc:
+        response.status = StatusType.error
+        response.detail = exc.detail
+    except Exception as exc:
+        response.status = StatusType.error
+        response.detail = UserDetails.exception_error
+        logger.error(exc)
+        email_service.send_error_log(str(exc))
+    finally:
+        return response
+
+
+@router.post('/', response_model=BaseAPIResponse)
+async def add_user(
+        user_data: UserAddSchema,
+        db_service: UserDBService = Depends(user_db_service),
+        email_service: UserEmailService = Depends(user_email_service)
+):
+    response = BaseAPIResponse()
+    try:
+        user_id = await db_service.add_user(user_data)
 
         if user_id is not None:
             response.data = {'user_id': user_id}
@@ -76,12 +106,12 @@ async def add_user(
 async def edit_user(
         user_id: int,
         new_user_data: UserEditSchema,
-        service: UserService = Depends(user_service),
+        db_service: UserDBService = Depends(user_db_service),
         email_service: UserEmailService = Depends(user_email_service)
 ):
     response = BaseAPIResponse()
     try:
-        user_id = await service.edit_user(user_id=user_id, new_user_data=new_user_data)
+        user_id = await db_service.edit_user(user_id=user_id, new_user_data=new_user_data)
 
         if user_id is not None:
             response.data = {'user_id': user_id}
@@ -103,12 +133,12 @@ async def edit_user(
 @router.delete('/', response_model=BaseAPIResponse)
 async def delete_user(
         user_id: int,
-        service: UserService = Depends(user_service),
+        db_service: UserDBService = Depends(user_db_service),
         email_service: UserEmailService = Depends(user_email_service)
 ):
     response = BaseAPIResponse()
     try:
-        user_id = await service.delete_user(user_id)
+        user_id = await db_service.delete_user(user_id)
 
         if user_id is not None:
             response.data = {'user_id': user_id}

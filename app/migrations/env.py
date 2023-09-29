@@ -7,7 +7,7 @@ from alembic import context
 
 from app.common import config
 
-from app.api.user.models import Base as UserBase
+from app.core import Base
 
 
 DB_URL = f'postgresql://{config.db_user}:{config.db_pass}@{config.db_host}:{config.db_port}/{config.db_name}'
@@ -24,9 +24,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
-target_metadata = [
-    UserBase.metadata,
-]
+target_metadata = Base.metadata
 # target_metadata = None
 
 # other values from the config, defined by the needs of env.py,

@@ -1,9 +1,9 @@
 from .repositories import UserRepository
-from .services import UserService, UserEmailService
+from .services import UserDBService, UserEmailService
 
 
-def user_service():
-    return UserService(UserRepository)
+def user_db_service():
+    return UserDBService(UserRepository)
 
 
 def user_email_service():
