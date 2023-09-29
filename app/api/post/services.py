@@ -3,7 +3,7 @@ from .models import Post
 
 from app.utils.repositories import AbstractRepository
 from app.utils.email import Email, EmailSchema, EmailMessages
-from app.utils.celery import send_log_celery
+from app.utils.celery import send_log_task
 
 from sqlalchemy.orm import joinedload
 
@@ -28,7 +28,7 @@ class PostDBService:
 
 class PostEmailService:
     @staticmethod
-    @send_log_celery.task
+    @send_log_task.task
     def send_error_log(error_log: str) -> None:
         email_schema = EmailSchema()
 

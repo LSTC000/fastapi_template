@@ -1,4 +1,4 @@
-__all__ = ['send_log_celery']
+__all__ = ['send_log_task']
 
 
-from .celery import send_log_celery
+from .tasks import send_log_task
