@@ -4,4 +4,7 @@ venv
 .env.dist
 .git
 .gitignore
+.pytest_cache
+pyproject.toml
+app/tests
 Makefile

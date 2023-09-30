@@ -2,4 +2,5 @@
 venv
 .env
 logs
+.pytest_cache
 **/__pycache__

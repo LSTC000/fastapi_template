@@ -30,5 +30,11 @@ class Config:
     db_port: int = os.getenv('DB_PORT')
     db_name: str = os.getenv('DB_NAME')
 
+    db_user_test: str = os.getenv('DB_USER_TEST')
+    db_pass_test: str = os.getenv('DB_PASS_TEST')
+    db_host_test: str = os.getenv('DB_HOST_TEST')
+    db_port_test: int = os.getenv('DB_PORT_TEST')
+    db_name_test: str = os.getenv('DB_NAME_TEST')
+
     user_log_path: str = r'logs/user.log'
     post_log_path: str = r'logs/post.log'
