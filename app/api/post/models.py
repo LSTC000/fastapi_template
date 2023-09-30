@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 class Post(Base):
     __tablename__ = 'post'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False, default='')
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
